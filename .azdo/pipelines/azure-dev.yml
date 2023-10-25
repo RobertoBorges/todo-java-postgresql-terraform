@@ -11,20 +11,20 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
+variables:
+- group: terraformsecrets
+
 steps:
   - task: setup-azd@0
     displayName: Install azd
 
   - pwsh: |
-      $info = $Env:AZURE_CREDENTIALS | ConvertFrom-Json -AsHashtable;
-      
       azd auth login `
-        --client-id "$($info.clientId)" `
-        --client-secret "$($info.clientSecret)" `
-        --tenant-id "$($info.tenantId)"
+        --client-id "$(ARM_CLIENT_ID)" `
+        --client-secret "$(ARM_CLIENT_SECRET)" `
+        --tenant-id "$(ARM_TENANT_ID)"
     displayName: azd login
-    env:
-      AZURE_CREDENTIALS: $(AZURE_CREDENTIALS)
+
 
   - task: JavaToolInstaller@0
     inputs:
